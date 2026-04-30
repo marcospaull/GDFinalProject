@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 public class Rock3D : MonoBehaviour
 {
@@ -122,6 +123,12 @@ public class Rock3D : MonoBehaviour
         // Check if player passed through scoring zone
         if (other.CompareTag("Scoring"))
         {
+            ScoringZone zone = other.GetComponent<ScoringZone>();
+
+            // Only score once per zone
+            if (zone == null || zone.triggered) return;
+            zone.triggered = true;
+
             // Increase score
             if (gameManager != null)
                 gameManager.AddScore();

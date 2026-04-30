@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8330243961792131142}
   - component: {fileID: 7555201514560201732}
+  - component: {fileID: 2143900856485510953}
   m_Layer: 0
   m_Name: ScoreZone
   m_TagString: Scoring
@@ -53,6 +54,19 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &2143900856485510953
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 310154857782301786}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ea92ab7a210818c40980e586c93886c5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  triggered: 0
 --- !u!1 &2970338608080446073
 GameObject:
   m_ObjectHideFlags: 0
@@ -321,7 +335,7 @@ GameObject:
   - component: {fileID: 235098208410146453}
   m_Layer: 0
   m_Name: PipePair
-  m_TagString: Untagged
+  m_TagString: Scoring
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

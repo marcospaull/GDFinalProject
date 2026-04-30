@@ -10,6 +10,19 @@ public class GameManager : MonoBehaviour
     private bool isPaused = false; // pause state
     private bool musicOn = true;   // music toggle
 
+    [Header("Frenzy Mode")]
+    public float frenzyDuration = 5f;
+    public float frenzyCooldown = 10f;
+    public float frenzySpeedBoost = 1.5f;
+    public TextMeshProUGUI frenzyText;
+
+    public bool isFrenzy { get; private set; } = false;
+    public float pipeSpeedMultiplier { get; private set; } = 1f;
+    private int scoreMultiplier = 1;
+    private float frenzyTimer = 0f;
+    private float cooldownTimer = 0f;
+    private bool onCooldown = false;
+
     [Header("UI")]
     public TextMeshProUGUI scoreText;
     public TextMeshProUGUI scoreTextShadow;
@@ -46,6 +59,9 @@ public class GameManager : MonoBehaviour
         // Make sure music starts unmuted
         if (musicSource != null)
             musicSource.mute = false;
+
+        scoreMultiplier = 1;
+        UpdateFrenzyUI();
     }
 
     void Update()
@@ -58,6 +74,63 @@ public class GameManager : MonoBehaviour
         {
             TogglePause();
         }
+
+        if (!isPaused)
+        {
+            // Press F to activate Frenzy Mode
+            if (Input.GetKeyDown(KeyCode.F) && !isFrenzy && !onCooldown)
+                ActivateFrenzy();
+
+            if (isFrenzy)
+            {
+                frenzyTimer -= Time.deltaTime;
+                UpdateFrenzyUI();
+                if (frenzyTimer <= 0f)
+                    DeactivateFrenzy();
+            }
+
+            if (onCooldown)
+            {
+                cooldownTimer -= Time.deltaTime;
+                UpdateFrenzyUI();
+                if (cooldownTimer <= 0f)
+                {
+                    onCooldown = false;
+                    UpdateFrenzyUI();
+                }
+            }
+        }
+    }
+
+    void ActivateFrenzy()
+    {
+        isFrenzy = true;
+        scoreMultiplier = 2;
+        frenzyTimer = frenzyDuration;
+        pipeSpeedMultiplier = frenzySpeedBoost;
+        UpdateFrenzyUI();
+    }
+
+    void DeactivateFrenzy()
+    {
+        isFrenzy = false;
+        scoreMultiplier = 1;
+        onCooldown = true;
+        cooldownTimer = frenzyCooldown;
+        pipeSpeedMultiplier = 1f;
+        UpdateFrenzyUI();
+    }
+
+    void UpdateFrenzyUI()
+    {
+        if (frenzyText == null) return;
+
+        if (isFrenzy)
+            frenzyText.text = $"2X: {Mathf.CeilToInt(frenzyTimer)}s";
+        else if (onCooldown)
+            frenzyText.text = $"Cooldown: {Mathf.CeilToInt(cooldownTimer)}s";
+        else
+            frenzyText.text = "F Ready!";
     }
 
     // Called when player scores
@@ -65,8 +138,7 @@ public class GameManager : MonoBehaviour
     {
         if (gameOver) return;
 
-        // Increase score
-        score++;
+        score += scoreMultiplier;
 
         // Update UI text
         if (scoreText != null)
@@ -86,6 +158,11 @@ public class GameManager : MonoBehaviour
 
         gameOver = true;
         isPaused = false;
+        isFrenzy = false;
+        onCooldown = false;
+        scoreMultiplier = 1;
+        pipeSpeedMultiplier = 1f;
+        if (frenzyText != null) frenzyText.text = "";
 
         // Show game over UI
         if (gameOverText != null)
