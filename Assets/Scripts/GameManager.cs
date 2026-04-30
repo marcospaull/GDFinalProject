@@ -11,7 +11,7 @@ public class GameManager : MonoBehaviour
     private bool musicOn = true;   // music toggle
 
     [Header("Frenzy Mode")]
-    public float frenzyDuration = 5f;
+    public float frenzyDuration = 10f;
     public float frenzyCooldown = 10f;
     public float frenzySpeedBoost = 1.5f;
     public TextMeshProUGUI frenzyText;
